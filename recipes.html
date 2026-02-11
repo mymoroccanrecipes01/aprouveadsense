@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Healthy Recipes & Calories — CaloriFuel</title>
+<meta name="description" content="Browse 12+ healthy recipes with full calorie and macro breakdowns. From chicken salads to smoothie bowls — all pre-calculated for you."/>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<script src="nav.js"></script>
+
+<main>
+  <div class="container">
+    <div class="page-hero" style="max-width:720px;margin:0 auto 0;">
+      <h1>Healthy Recipes</h1>
+      <p>Browse curated recipes with full calorie &amp; macro breakdowns — already calculated for you.</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="recipe-filters" id="filterBtns">
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="salad">🥗 Salads</button>
+      <button class="filter-btn" data-cat="main">🍲 Main Dishes</button>
+      <button class="filter-btn" data-cat="breakfast">🥣 Breakfast</button>
+      <button class="filter-btn" data-cat="snack">🍎 Snacks</button>
+      <button class="filter-btn" data-cat="smoothie">🥤 Smoothies</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="recipes-grid" id="recipesGrid"></div>
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-hero" id="modalHero"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// RECIPES DATA
+// ============================================================
+const RECIPES = [
+  {
+    id: 1, cat: "salad", emoji: "🥗", color: "#eef7ee",
+    title: "Grilled Chicken Caesar Salad",
+    desc: "Classic Caesar with grilled chicken, croutons, and parmesan. Satisfying yet light.",
+    cal: 420, protein: 38, carbs: 18, fat: 22, time: "25 min", servings: 1,
+    ingredients: [
+      { name: "Chicken Breast (cooked)", amount: "150g" },
+      { name: "Romaine Lettuce", amount: "2 cups (94g)" },
+      { name: "Cheddar Cheese", amount: "30g" },
+      { name: "Bread (white) — croutons", amount: "32g" },
+      { name: "Olive Oil", amount: "1 tbsp" },
+      { name: "Lemon Juice + Garlic", amount: "20g" }
+    ],
+    steps: [
+      "Grill the chicken breast until cooked, then slice into strips.",
+      "Chop the romaine lettuce and place in a large bowl.",
+      "Toast bread cubes in olive oil until golden and crispy.",
+      "Shave parmesan cheese over the salad.",
+      "Toss with Caesar dressing and top with croutons."
+    ]
+  },
+  {
+    id: 2, cat: "main", emoji: "🍝", color: "#fef3ec",
+    title: "Creamy Garlic Pasta",
+    desc: "Comforting pasta with a creamy garlic sauce, cherry tomatoes, and fresh parsley.",
+    cal: 580, protein: 18, carbs: 72, fat: 24, time: "30 min", servings: 2,
+    ingredients: [
+      { name: "Pasta (cooked)", amount: "280g (2 cups)" },
+      { name: "Heavy Cream", amount: "60ml (¼ cup)" },
+      { name: "Garlic (raw)", amount: "4 cloves (12g)" },
+      { name: "Tomato (raw)", amount: "2 small (246g)" },
+      { name: "Olive Oil", amount: "2 tbsp" },
+      { name: "Mozzarella", amount: "40g" },
+      { name: "Butter", amount: "1 tbsp" }
+    ],
+    steps: [
+      "Cook pasta according to package directions, drain and set aside.",
+      "Sauté minced garlic in olive oil and butter for 1 minute.",
+      "Add chopped tomatoes, cook until softened (5 min).",
+      "Pour in heavy cream, simmer on low for 3 minutes.",
+      "Toss pasta into the sauce, top with mozzarella and serve."
+    ]
+  },
+  {
+    id: 3, cat: "breakfast", emoji: "🥣", color: "#eef2ff",
+    title: "Overnight Oats",
+    desc: "Prep the night before — wake up to a creamy, protein-packed breakfast in seconds.",
+    cal: 310, protein: 12, carbs: 46, fat: 8, time: "5 min + overnight", servings: 1,
+    ingredients: [
+      { name: "Oats (rolled, dry)", amount: "45g (½ cup)" },
+      { name: "Greek Yogurt", amount: "85g (½ cup)" },
+      { name: "Milk (whole)", amount: "122ml (½ cup)" },
+      { name: "Honey", amount: "1 tbsp" },
+      { name: "Banana", amount: "½ piece (59g)" },
+      { name: "Chia Seeds", amount: "1 tsp (4g)" }
+    ],
+    steps: [
+      "Add oats, chia seeds, yogurt, and milk to a jar.",
+      "Stir in honey and mix well.",
+      "Seal and refrigerate overnight (at least 6 hours).",
+      "In the morning, top with sliced banana and enjoy cold."
+    ]
+  },
+  {
+    id: 4, cat: "smoothie", emoji: "🥤", color: "#e0f2fe",
+    title: "Tropical Mango Smoothie",
+    desc: "Vibrant, refreshing, and packed with vitamins — the perfect morning or post-workout drink.",
+    cal: 220, protein: 5, carbs: 45, fat: 2, time: "5 min", servings: 1,
+    ingredients: [
+      { name: "Mango", amount: "1 piece (200g)" },
+      { name: "Banana", amount: "1 piece (118g)" },
+      { name: "Orange Juice (fresh)", amount: "½ cup (122ml)" },
+      { name: "Greek Yogurt", amount: "85g (½ cup)" },
+      { name: "Honey", amount: "1 tsp" }
+    ],
+    steps: [
+      "Peel and chop the mango and banana.",
+      "Add all ingredients to a blender.",
+      "Blend on high until completely smooth.",
+      "Pour into a glass and enjoy immediately."
+    ]
+  },
+  {
+    id: 5, cat: "main", emoji: "🐟", color: "#f0fdf4",
+    title: "Baked Salmon Bowl",
+    desc: "A nutrition powerhouse. Flaky salmon over quinoa with roasted veggies and avocado.",
+    cal: 510, protein: 35, carbs: 32, fat: 26, time: "35 min", servings: 1,
+    ingredients: [
+      { name: "Salmon (cooked)", amount: "150g" },
+      { name: "Quinoa (cooked)", amount: "1 cup (185g)" },
+      { name: "Avocado", amount: "½ piece (75g)" },
+      { name: "Broccoli (cooked)", amount: "1 cup (156g)" },
+      { name: "Olive Oil", amount: "1 tbsp" },
+      { name: "Lemon + Salt", amount: "to taste" }
+    ],
+    steps: [
+      "Preheat oven to 200°C. Season salmon with olive oil, salt, and lemon.",
+      "Bake salmon for 15 minutes until flaky.",
+      "Cook quinoa and roast broccoli until tender.",
+      "Assemble the bowl: quinoa base, salmon on top, sliced avocado, broccoli.",
+      "Drizzle with lemon juice and serve."
+    ]
+  },
+  {
+    id: 6, cat: "snack", emoji: "🍎", color: "#fef9c3",
+    title: "Almond Butter Apple Slices",
+    desc: "The ultimate grab-and-go snack. Crunchy, sweet, and surprisingly filling.",
+    cal: 260, protein: 6, carbs: 30, fat: 14, time: "3 min", servings: 1,
+    ingredients: [
+      { name: "Apple", amount: "1 piece (182g)" },
+      { name: "Almond Butter", amount: "2 tbsp (64g)" },
+      { name: "Chia Seeds", amount: "1 tsp (4g)" }
+    ],
+    steps: [
+      "Core and slice the apple into wedges.",
+      "Spread almond butter generously on each slice.",
+      "Sprinkle chia seeds on top for an extra nutrition boost.",
+      "Serve immediately or pack for later."
+    ]
+  },
+  {
+    id: 7, cat: "salad", emoji: "🥙", color: "#fdf2f8",
+    title: "Quinoa Mediterranean Salad",
+    desc: "Bright, tangy, and meal-prep friendly. Keeps well in the fridge for 3–4 days.",
+    cal: 380, protein: 11, carbs: 42, fat: 18, time: "20 min", servings: 2,
+    ingredients: [
+      { name: "Quinoa (cooked)", amount: "2 cups (370g)" },
+      { name: "Tomato (raw)", amount: "2 pieces (246g)" },
+      { name: "Bell Pepper (raw)", amount: "1 piece (130g)" },
+      { name: "Onion (raw)", amount: "½ piece (58g)" },
+      { name: "Olive Oil", amount: "2 tbsp" },
+      { name: "Balsamic Vinegar", amount: "1 tbsp" },
+      { name: "Mozzarella", amount: "40g" }
+    ],
+    steps: [
+      "Cook quinoa and let it cool to room temperature.",
+      "Dice tomatoes, bell pepper, and red onion.",
+      "Combine everything in a large bowl.",
+      "Whisk olive oil and balsamic vinegar, pour over salad.",
+      "Crumble mozzarella on top. Season with salt and pepper."
+    ]
+  },
+  {
+    id: 8, cat: "breakfast", emoji: "🍳", color: "#fff7ed",
+    title: "Spinach & Egg Scramble",
+    desc: "Protein-packed scrambled eggs loaded with spinach. Ready in under 10 minutes.",
+    cal: 280, protein: 22, carbs: 5, fat: 19, time: "10 min", servings: 1,
+    ingredients: [
+      { name: "Egg (large)", amount: "3 pieces (150g)" },
+      { name: "Spinach (raw)", amount: "1 cup (30g)" },
+      { name: "Butter", amount: "1 tbsp" },
+      { name: "Milk (whole)", amount: "2 tbsp (30ml)" },
+      { name: "Salt + Pepper", amount: "to taste" }
+    ],
+    steps: [
+      "Crack eggs into a bowl, add milk, salt, and pepper. Whisk well.",
+      "Melt butter in a non-stick pan over medium-low heat.",
+      "Add spinach, cook until wilted (1 minute).",
+      "Pour in egg mixture. Stir gently until eggs are softly set.",
+      "Remove from heat immediately — eggs continue cooking. Serve hot."
+    ]
+  },
+  {
+    id: 9, cat: "smoothie", emoji: "💚", color: "#f0fdf4",
+    title: "Green Detox Smoothie",
+    desc: "Cleansing and energizing. Packed with greens, banana for creaminess, and a hint of honey.",
+    cal: 185, protein: 4, carbs: 38, fat: 2, time: "5 min", servings: 1,
+    ingredients: [
+      { name: "Spinach (raw)", amount: "2 cups (60g)" },
+      { name: "Banana", amount: "1 piece (118g)" },
+      { name: "Apple", amount: "½ piece (91g)" },
+      { name: "Honey", amount: "1 tsp" },
+      { name: "Water", amount: "1 cup (240ml)" }
+    ],
+    steps: [
+      "Wash spinach and add to blender.",
+      "Add sliced banana, apple chunks, and honey.",
+      "Pour in water.",
+      "Blend until completely smooth and vibrant green.",
+      "Serve immediately for maximum freshness."
+    ]
+  },
+  {
+    id: 10, cat: "main", emoji: "🍲", color: "#fef3ec",
+    title: "Turkey & Veggie Stir Fry",
+    desc: "Quick, high-protein weeknight dinner. Served over brown rice for a complete meal.",
+    cal: 440, protein: 34, carbs: 38, fat: 12, time: "25 min", servings: 1,
+    ingredients: [
+      { name: "Turkey Breast (cooked)", amount: "120g" },
+      { name: "Brown Rice (cooked)", amount: "1 cup (195g)" },
+      { name: "Bell Pepper (raw)", amount: "1 piece (130g)" },
+      { name: "Broccoli (cooked)", amount: "1 cup (156g)" },
+      { name: "Carrot (raw)", amount: "1 piece (61g)" },
+      { name: "Soy Sauce", amount: "2 tbsp" },
+      { name: "Vegetable Oil", amount: "1 tbsp" }
+    ],
+    steps: [
+      "Slice turkey, peppers, broccoli, and carrots into bite-sized pieces.",
+      "Heat oil in a wok or large pan over high heat.",
+      "Add carrots first, cook 3 minutes. Then add peppers and broccoli.",
+      "Add turkey, cook until heated through.",
+      "Pour soy sauce over everything, toss well. Serve over brown rice."
+    ]
+  },
+  {
+    id: 11, cat: "snack", emoji: "🥜", color: "#fefce8",
+    title: "Energy Trail Mix",
+    desc: "Handful-sized portions of nuts, seeds, and dark chocolate for sustained energy on the go.",
+    cal: 320, protein: 9, carbs: 22, fat: 24, time: "2 min", servings: 1,
+    ingredients: [
+      { name: "Almonds", amount: "1 tbsp (12g)" },
+      { name: "Walnuts", amount: "1 tbsp (10g)" },
+      { name: "Chia Seeds", amount: "1 tbsp (12g)" },
+      { name: "Dark Chocolate", amount: "1 piece (30g)" },
+      { name: "Dried fruit", amount: "20g" }
+    ],
+    steps: [
+      "Measure out each ingredient.",
+      "Combine everything in a small bowl or container.",
+      "Mix gently and portion into single-serving bags.",
+      "Store at room temperature for up to 1 week."
+    ]
+  },
+  {
+    id: 12, cat: "main", emoji: "🍛", color: "#f0fdf4",
+    title: "Lentil & Vegetable Curry",
+    desc: "A hearty, plant-based curry that's warming, filling, and incredibly flavorful.",
+    cal: 350, protein: 18, carbs: 52, fat: 8, time: "40 min", servings: 2,
+    ingredients: [
+      { name: "Lentils (cooked)", amount: "2 cups (400g)" },
+      { name: "Tomato (raw)", amount: "3 pieces (369g)" },
+      { name: "Onion (raw)", amount: "1 piece (115g)" },
+      { name: "Carrot (raw)", amount: "2 pieces (122g)" },
+      { name: "Garlic (raw)", amount: "3 cloves (9g)" },
+      { name: "Coconut Oil", amount: "1 tbsp" },
+      { name: "Curry powder + spices", amount: "to taste" }
+    ],
+    steps: [
+      "Dice onion, carrots, garlic, and tomatoes.",
+      "Heat coconut oil, sauté onion and garlic until fragrant.",
+      "Add carrots and cook 5 minutes.",
+      "Add tomatoes, curry powder, and lentils. Stir well.",
+      "Simmer on low for 20 minutes until carrots are tender. Serve hot."
+    ]
+  }
+];
+
+// ============================================================
+// RENDER CARDS
+// ============================================================
+const grid = document.getElementById('recipesGrid');
+
+function renderCards(cat) {
+  const list = cat === 'all' ? RECIPES : RECIPES.filter(r => r.cat === cat);
+  grid.innerHTML = list.map(r => `
+    <div class="recipe-card" data-id="${r.id}" onclick="openModal(${r.id})">
+      <div class="recipe-card-img" style="background:${r.color};">
+        ${r.emoji}
+        <span class="rc-tag">${r.cat.charAt(0).toUpperCase()+r.cat.slice(1)}</span>
+      </div>
+      <div class="recipe-card-body">
+        <h3>${r.title}</h3>
+        <p class="rc-desc">${r.desc}</p>
+        <div class="recipe-card-footer">
+          <span class="rc-cal">🔥 ${r.cal} kcal</span>
+          <span class="rc-time">⏱ ${r.time}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+renderCards('all');
+
+// ============================================================
+// FILTER BUTTONS
+// ============================================================
+document.getElementById('filterBtns').addEventListener('click', (e) => {
+  const btn = e.target.closest('.filter-btn');
+  if(!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(btn.dataset.cat);
+});
+
+// ============================================================
+// MODAL
+// ============================================================
+const overlay  = document.getElementById('modalOverlay');
+const mHero    = document.getElementById('modalHero');
+const mBody    = document.getElementById('modalBody');
+
+function openModal(id) {
+  const r = RECIPES.find(x => x.id === id);
+  if(!r) return;
+
+  mHero.style.background = r.color;
+  mHero.innerHTML = `<span style="font-size:5rem">${r.emoji}</span>`;
+
+  mBody.innerHTML = `
+    <h2>${r.title}</h2>
+    <div class="modal-meta">
+      <span>⏱ ${r.time}</span>
+      <span>🍽 ${r.servings} serving${r.servings>1?'s':''}</span>
+      <span>🔥 ${r.cal} kcal</span>
+    </div>
+    <p style="color:var(--gray-500);font-size:.92rem;margin:0 0 .5rem;">${r.desc}</p>
+
+    <div class="modal-macros">
+      <div class="mm p"><div class="mm-val">${r.protein}g</div><div class="mm-lbl">Protein</div></div>
+      <div class="mm c"><div class="mm-val">${r.carbs}g</div><div class="mm-lbl">Carbs</div></div>
+      <div class="mm f"><div class="mm-val">${r.fat}g</div><div class="mm-lbl">Fat</div></div>
+    </div>
+
+    <h4>🥬 Ingredients</h4>
+    <ul>${r.ingredients.map(i => `<li>${i.name} <span>${i.amount}</span></li>`).join('')}</ul>
+
+    <h4>📝 Instructions</h4>
+    <ol class="modal-steps">${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+
+    <div class="modal-cta">
+      <a href="index.html">🧮 Calculate Your Own Recipe</a>
+    </div>
+  `;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>

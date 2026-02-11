@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FAQ — CaloriFuel</title>
+<meta name="description" content="Frequently asked questions about CaloriFuel recipe calorie calculator — how it works, accuracy, and more."/>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<script src="nav.js"></script>
+
+<main>
+  <div class="container-sm">
+
+    <div class="page-hero">
+      <h1>Frequently Asked Questions</h1>
+      <p>Everything you need to know about CaloriFuel — answered.</p>
+    </div>
+
+    <div class="policy-content">
+
+      <h2>Using CaloriFuel</h2>
+      <div id="faqList"></div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+const FAQS = [
+  {
+    q: "How do I calculate the calories of a recipe?",
+    a: "It's simple! Use the search bar on the main page to find each ingredient in your recipe. Select it, enter the quantity and unit (grams, cups, tablespoons, etc.), and click Add. The total calories and macronutrients update instantly as you build your recipe."
+  },
+  {
+    q: "Is CaloriFuel free to use?",
+    a: "Yes — completely free, forever. There are no hidden fees, subscriptions, or paywalls. You don't even need to create an account. Just open the site and start calculating."
+  },
+  {
+    q: "How accurate are the nutritional values?",
+    a: "Our ingredient data is sourced from widely recognized food composition databases, including the USDA FoodData Central. Values are given per 100 grams and scaled to your input. Keep in mind that real-world values can vary slightly based on brand, preparation, and origin, so treat these as reliable estimates."
+  },
+  {
+    q: "What units can I use?",
+    a: "CaloriFuel supports grams (g), milliliters (ml), cups, tablespoons, teaspoons, and pieces. When you select a unit other than grams, the calculator uses standard conversion factors to translate your input into grams before computing nutrition."
+  },
+  {
+    q: "Can I use CaloriFuel on my phone?",
+    a: "Absolutely. CaloriFuel is fully responsive and works beautifully on any screen size — desktop, tablet, or smartphone. No app download required."
+  },
+  {
+    q: "How many ingredients are in the database?",
+    a: "We currently have over 80 common ingredients covering proteins, dairy, grains, vegetables, fruits, nuts, oils, beverages, legumes, and condiments. We're continuously expanding the list based on user feedback."
+  },
+  {
+    q: "Can I save my recipes?",
+    a: "Not yet — but this is on our roadmap! For now, you can note down your recipe details after calculating. We plan to add a save & share feature in the near future."
+  },
+  {
+    q: "What are macronutrients and why do they matter?",
+    a: "Macronutrients — protein, carbohydrates, and fat — are the three main nutrients your body uses for energy and building blocks. Protein supports muscle repair, carbs provide quick energy, and fats support cell health and hormone production. Understanding your macro balance helps you make more informed dietary choices."
+  },
+  {
+    q: "How does the macro breakdown percentage work?",
+    a: "The percentage shown in the macro breakdown is calculated by calorie contribution: protein and carbs each contribute 4 calories per gram, while fat contributes 9 calories per gram. The bar chart shows what proportion of your total recipe calories comes from each macronutrient."
+  },
+  {
+    q: "Is my data private? Do you track me?",
+    a: "Yes, your privacy matters to us. We do not collect any personal information, and all calculations happen directly in your browser — nothing is sent to our servers. Please review our Privacy Policy for full details."
+  },
+  {
+    q: "What if my ingredient isn't in the list?",
+    a: "We're constantly updating our database. If you can't find an ingredient, please reach out via our Contact page and let us know — we'll do our best to add it. In the meantime, you can use the gram value from the product's nutrition label directly."
+  },
+  {
+    q: "Can I use CaloriFuel for meal planning or dieting?",
+    a: "CaloriFuel is a great tool to support meal planning and dietary goals. By calculating the calories and macros of your recipes, you can better understand what you're eating and adjust your meals accordingly. However, we recommend consulting a healthcare professional or registered dietitian for personalized diet advice."
+  },
+  {
+    q: "Who owns CaloriFuel?",
+    a: "CaloriFuel is an independent project built by a small team of developers and nutrition enthusiasts. We are not affiliated with any food company or health organization. Our goal is simply to make nutrition information accessible to everyone."
+  },
+  {
+    q: "How can I contact you?",
+    a: "You can reach us through our Contact page at any time. We welcome questions, suggestions, bug reports, and general feedback. We typically respond within 24 hours."
+  }
+];
+
+const list = document.getElementById('faqList');
+list.innerHTML = FAQS.map((f, i) => `
+  <div class="faq-item" id="faq-${i}">
+    <button class="faq-q" onclick="toggleFaq(${i})">
+      ${f.q}
+      <span class="arrow">▼</span>
+    </button>
+    <div class="faq-a">${f.a}</div>
+  </div>
+`).join('');
+
+function toggleFaq(i){
+  const item = document.getElementById('faq-'+i);
+  const wasOpen = item.classList.contains('open');
+  // close all
+  document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+  // toggle current
+  if(!wasOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CaloriFuel — Free Recipe Calorie Calculator</title>
+<meta name="description" content="Calculate the exact calories and macros of any recipe by adding ingredients. Free, fast, no sign-up needed."/>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="stylesheet" href="style.css"/>
+
+<meta name="robots" content="index, follow"/>
+<meta property="og:title" content="CaloriFuel — Free Recipe Calorie Calculator"/>
+<meta property="og:description" content="Calculate the exact calories and macros of any recipe by adding ingredients. Free, fast, no sign-up needed."/>
+<meta property="og:url" content="https://califuel.com/index.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:image" content="https://califuel.com/og-image.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="CaloriFuel — Free Recipe Calorie Calculator"/>
+<meta name="twitter:description" content="Calculate the exact calories and macros of any recipe by adding ingredients. Free, fast, no sign-up needed."/>
+<link rel="canonical" href="https://califuel.com/index.html"/>
+<!-- Google Search Console: replace content with your verification code -->
+<meta name="google-site-verification" content="REPLACE_WITH_YOUR_VERIFICATION_CODE"/>
+</head>
+<body>
+
+<script src="nav.js"></script>
+
+<main>
+
+<!-- ============ ADSENSE AD: HEADER (728x90) ============
+     Remplace le contenu ci-dessous par votre code AdSense
+     une fois que votre compte sera approuvé.
+     ================================================== -->
+<div class="ad-container ad-header">
+  <!-- 
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  -->
+</div>
+
+  <div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <span class="hero-badge">🥗 Nutrition Made Simple</span>
+      <h1>Recipe Calorie<br/>Calculator</h1>
+      <p>Add your ingredients, set the quantity — get instant calories &amp; macros for your entire recipe.</p>
+    </section>
+
+<!-- ============ ADSENSE AD: IN-CONTENT ============
+     Ad au milieu du contenu — très bon CPM
+     Remplace avec votre code AdSense après approval.
+     ================================================== -->
+<div class="ad-container ad-content">
+  <!-- 
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  -->
+</div>
+
+
+    <!-- CALCULATOR GRID -->
+    <div class="calc-grid">
+
+      <!-- LEFT — INPUT -->
+      <div class="card">
+        <div class="section-label">Add Ingredients</div>
+
+        <div class="search-wrap" id="searchWrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search ingredient…" autocomplete="off" />
+          <div class="suggestions" id="suggestions"></div>
+        </div>
+
+        <div class="qty-row" id="qtyRow" style="display:none;">
+          <div class="input-group">
+            <label>Quantity</label>
+            <input type="number" id="qtyInput" min="1" value="100" />
+          </div>
+          <div class="input-group">
+            <label>Unit</label>
+            <select id="unitSelect">
+              <option value="g">Grams (g)</option>
+              <option value="ml">Milliliters (ml)</option>
+              <option value="cup">Cup</option>
+              <option value="tbsp">Tablespoon</option>
+              <option value="tsp">Teaspoon</option>
+              <option value="piece">Piece</option>
+            </select>
+          </div>
+          <button class="btn-add" id="addBtn">+ Add</button>
+        </div>
+
+        <div class="ingredient-list" id="ingredientList">
+          <div class="empty-state" id="emptyState">
+            <div class="empty-icon">🍽️</div>
+            Search &amp; add ingredients to start calculating
+          </div>
+        </div>
+
+        <button class="btn-clear" id="clearBtn" style="display:none;">🗑️ Clear all ingredients</button>
+      </div>
+
+      <!-- RIGHT — RESULTS -->
+      <div class="results-panel">
+        <div class="total-box">
+          <div class="total-label">Total Calories</div>
+          <div class="total-value" id="totalCal">0</div>
+          <div class="total-sub" id="totalItems">0 ingredients</div>
+        </div>
+
+        <div class="card">
+          <div class="section-label">Macronutrients</div>
+          <div class="macro-grid">
+            <div class="macro-card protein">
+              <div class="macro-val" id="proteinVal">0<span style="font-size:.7em;font-weight:400">g</span></div>
+              <div class="macro-lbl">Protein</div>
+            </div>
+            <div class="macro-card carbs">
+              <div class="macro-val" id="carbsVal">0<span style="font-size:.7em;font-weight:400">g</span></div>
+              <div class="macro-lbl">Carbs</div>
+            </div>
+            <div class="macro-card fat">
+              <div class="macro-val" id="fatVal">0<span style="font-size:.7em;font-weight:400">g</span></div>
+              <div class="macro-lbl">Fat</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-label">Macro Breakdown</div>
+          <div class="macro-bar-wrap">
+            <div class="macro-bar-label"><span>🥩 Protein</span><span id="proteinPct">0%</span></div>
+            <div class="macro-bar-bg"><div class="macro-bar protein-bar" id="proteinBar" style="width:0%"></div></div>
+          </div>
+          <div class="macro-bar-wrap" style="margin-top:.9rem;">
+            <div class="macro-bar-label"><span>🍚 Carbs</span><span id="carbsPct">0%</span></div>
+            <div class="macro-bar-bg"><div class="macro-bar carbs-bar" id="carbsBar" style="width:0%"></div></div>
+          </div>
+          <div class="macro-bar-wrap" style="margin-top:.9rem;">
+            <div class="macro-bar-label"><span>🥑 Fat</span><span id="fatPct">0%</span></div>
+            <div class="macro-bar-bg"><div class="macro-bar fat-bar" id="fatBar" style="width:0%"></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// INGREDIENT DATABASE  (per 100 g unless noted)
+// { name, cal, protein, carbs, fat, unitFactors }
+// unitFactors: how many grams 1 unit equals
+// ============================================================
+const DB = [
+  // ── Proteins ──
+  { name:"Chicken Breast (cooked)",  cal:165, protein:31, carbs:0,  fat:3.6,  unitFactors:{piece:150} },
+  { name:"Beef (ground, cooked)",    cal:250, protein:26, carbs:0,  fat:15,   unitFactors:{piece:100} },
+  { name:"Salmon (cooked)",          cal:208, protein:20, carbs:0,  fat:13,   unitFactors:{piece:150} },
+  { name:"Egg (large)",              cal:155, protein:13, carbs:1.1,fat:11,   unitFactors:{piece:50}  },
+  { name:"Tuna (canned)",            cal:128, protein:29, carbs:0,  fat:1,    unitFactors:{piece:85}  },
+  { name:"Turkey Breast (cooked)",   cal:135, protein:30, carbs:0,  fat:1,    unitFactors:{piece:120} },
+  { name:"Shrimp (cooked)",          cal:99,  protein:24, carbs:0,  fat:0.3,  unitFactors:{piece:30}  },
+  { name:"Tofu (firm)",              cal:76,  protein:8,  carbs:1.9,fat:4.8,  unitFactors:{piece:100} },
+  { name:"Lentils (cooked)",         cal:116, protein:9,  carbs:20, fat:0.4,  unitFactors:{cup:200}   },
+  { name:"Chickpeas (cooked)",       cal:164, protein:9,  carbs:27, fat:2.6,  unitFactors:{cup:170}   },
+
+  // ── Dairy ──
+  { name:"Milk (whole)",             cal:61,  protein:3.2,carbs:4.8,fat:3.3,  unitFactors:{cup:244}   },
+  { name:"Milk (skimmed)",           cal:34,  protein:3.4,carbs:5,  fat:0.08, unitFactors:{cup:244}   },
+  { name:"Greek Yogurt",             cal:59,  protein:10, carbs:3.6,fat:0.4,  unitFactors:{cup:170}   },
+  { name:"Cheddar Cheese",           cal:403, protein:25, carbs:1.3,fat:33,   unitFactors:{piece:30}  },
+  { name:"Mozzarella",               cal:280, protein:22, carbs:2.2,fat:21,   unitFactors:{piece:40}  },
+  { name:"Butter",                   cal:717, protein:0.9,carbs:0.1,fat:81,   unitFactors:{tbsp:14}   },
+  { name:"Cream Cheese",             cal:342, protein:6,  carbs:4,  fat:34,   unitFactors:{tbsp:29}   },
+  { name:"Heavy Cream",              cal:342, protein:2.4,carbs:2.7,fat:36,   unitFactors:{cup:240,tbsp:15} },
+
+  // ── Grains & Carbs ──
+  { name:"White Rice (cooked)",      cal:130, protein:2.7,carbs:28, fat:0.3,  unitFactors:{cup:186}   },
+  { name:"Brown Rice (cooked)",      cal:111, protein:2.6,carbs:23, fat:0.9,  unitFactors:{cup:195}   },
+  { name:"Pasta (cooked)",           cal:131, protein:5,  carbs:25, fat:1.1,  unitFactors:{cup:140}   },
+  { name:"Bread (white)",            cal:265, protein:9,  carbs:49, fat:3.2,  unitFactors:{piece:32}  },
+  { name:"Bread (whole wheat)",      cal:247, protein:13, carbs:41, fat:3.4,  unitFactors:{piece:36}  },
+  { name:"Oats (rolled, dry)",       cal:389, protein:17, carbs:66, fat:7,    unitFactors:{cup:90}    },
+  { name:"Quinoa (cooked)",          cal:120, protein:4.4,carbs:21, fat:1.9,  unitFactors:{cup:185}   },
+  { name:"Potato (baked)",           cal:77,  protein:2,  carbs:17, fat:0.1,  unitFactors:{piece:150} },
+  { name:"Sweet Potato (cooked)",    cal:86,  protein:1.6,carbs:20, fat:0.1,  unitFactors:{piece:114} },
+  { name:"Flour (all-purpose)",      cal:364, protein:10, carbs:76, fat:1,    unitFactors:{cup:125,tbsp:8} },
+  { name:"Sugar (white)",            cal:387, protein:0,  carbs:100,fat:0,    unitFactors:{cup:200,tbsp:12,tsp:4} },
+
+  // ── Vegetables ──
+  { name:"Broccoli (cooked)",        cal:35,  protein:2.8,carbs:7,  fat:0.4,  unitFactors:{cup:156}   },
+  { name:"Spinach (raw)",            cal:23,  protein:2.9,carbs:3.6,fat:0.4,  unitFactors:{cup:30}    },
+  { name:"Carrot (raw)",             cal:41,  protein:0.9,carbs:10, fat:0.2,  unitFactors:{piece:61}  },
+  { name:"Tomato (raw)",             cal:18,  protein:0.9,carbs:3.9,fat:0.2,  unitFactors:{piece:123} },
+  { name:"Onion (raw)",              cal:39,  protein:1.1,carbs:9.3,fat:0.1,  unitFactors:{piece:115} },
+  { name:"Garlic (raw)",             cal:149, protein:6.3,carbs:33, fat:0.5,  unitFactors:{piece:3}   },
+  { name:"Bell Pepper (raw)",        cal:31,  protein:1,  carbs:7,  fat:0.3,  unitFactors:{piece:130} },
+  { name:"Mushrooms (raw)",          cal:22,  protein:3.1,carbs:3.3,fat:0.3,  unitFactors:{cup:70}    },
+  { name:"Lettuce (romaine)",        cal:17,  protein:1.2,carbs:3.2,fat:0.2,  unitFactors:{cup:47}    },
+  { name:"Avocado",                  cal:160, protein:2,  carbs:9,  fat:15,   unitFactors:{piece:150} },
+  { name:"Corn (sweet, cooked)",     cal:86,  protein:3.2,carbs:19, fat:1.3,  unitFactors:{cup:150}   },
+  { name:"Zucchini (raw)",           cal:16,  protein:1.2,carbs:3.1,fat:0.2,  unitFactors:{piece:130} },
+
+  // ── Fruits ──
+  { name:"Banana",                   cal:89,  protein:1.1,carbs:23, fat:0.3,  unitFactors:{piece:118} },
+  { name:"Apple",                    cal:95,  protein:0.5,carbs:25, fat:0.3,  unitFactors:{piece:182} },
+  { name:"Orange",                   cal:47,  protein:0.9,carbs:12, fat:0.1,  unitFactors:{piece:131} },
+  { name:"Strawberries",             cal:32,  protein:0.7,carbs:7.7,fat:0.3,  unitFactors:{cup:150}   },
+  { name:"Blueberries",              cal:57,  protein:0.7,carbs:14, fat:0.3,  unitFactors:{cup:148}   },
+  { name:"Grapes",                   cal:69,  protein:0.6,carbs:18, fat:0.2,  unitFactors:{cup:151}   },
+  { name:"Mango",                    cal:60,  protein:0.4,carbs:15, fat:0.2,  unitFactors:{piece:200} },
+  { name:"Pineapple",                cal:50,  protein:0.5,carbs:13, fat:0.1,  unitFactors:{cup:155}   },
+
+  // ── Nuts & Seeds ──
+  { name:"Almonds",                  cal:575, protein:21, carbs:22, fat:50,   unitFactors:{cup:143,tbsp:12} },
+  { name:"Peanuts",                  cal:567, protein:25, carbs:16, fat:49,   unitFactors:{cup:145,tbsp:12} },
+  { name:"Walnuts",                  cal:654, protein:15, carbs:14, fat:65,   unitFactors:{cup:120,tbsp:10} },
+  { name:"Chia Seeds",               cal:486, protein:17, carbs:42, fat:31,   unitFactors:{tbsp:12}   },
+  { name:"Peanut Butter",            cal:588, protein:25, carbs:20, fat:50,   unitFactors:{tbsp:32,cup:256} },
+  { name:"Almond Butter",            cal:614, protein:21, carbs:21, fat:54,   unitFactors:{tbsp:32}   },
+
+  // ── Oils & Fats ──
+  { name:"Olive Oil",                cal:884, protein:0,  carbs:0,  fat:100,  unitFactors:{tbsp:14,cup:216} },
+  { name:"Coconut Oil",              cal:862, protein:0,  carbs:0,  fat:100,  unitFactors:{tbsp:14}   },
+  { name:"Vegetable Oil",            cal:884, protein:0,  carbs:0,  fat:100,  unitFactors:{tbsp:14}   },
+
+  // ── Beverages ──
+  { name:"Orange Juice (fresh)",     cal:45,  protein:0.7,carbs:10, fat:0.2,  unitFactors:{cup:244}   },
+  { name:"Whole Milk",               cal:61,  protein:3.2,carbs:4.8,fat:3.3,  unitFactors:{cup:244}   },
+  { name:"Honey",                    cal:304, protein:0.3,carbs:82, fat:0,    unitFactors:{tbsp:21,tsp:7,cup:340} },
+
+  // ── Condiments / Other ──
+  { name:"Ketchup",                  cal:100, protein:1.9,carbs:24, fat:0.1,  unitFactors:{tbsp:15}   },
+  { name:"Mayo (regular)",           cal:680, protein:1,  carbs:0.8,fat:75,   unitFactors:{tbsp:14}   },
+  { name:"Soy Sauce",                cal:60,  protein:8,  carbs:8,  fat:0,    unitFactors:{tbsp:16}   },
+  { name:"Mustard (yellow)",         cal:60,  protein:4,  carbs:6,  fat:3.3,  unitFactors:{tbsp:15}   },
+  { name:"Vinegar (white)",          cal:5,   protein:0,  carbs:0.8,fat:0,    unitFactors:{tbsp:14}   },
+  { name:"Salt",                     cal:0,   protein:0,  carbs:0,  fat:0,    unitFactors:{tsp:6,tbsp:18} },
+  { name:"Balsamic Vinegar",         cal:88,  protein:0.5,carbs:17, fat:0,    unitFactors:{tbsp:15}   },
+  { name:"Cocoa Powder (unsweetened)",cal:277,protein:20, carbs:46, fat:12,   unitFactors:{tbsp:6,cup:85} },
+  { name:"Dark Chocolate",           cal:546, protein:5,  carbs:60, fat:31,   unitFactors:{piece:30}  },
+  { name:"Maple Syrup",              cal:258, protein:0.2,carbs:66, fat:0.1,  unitFactors:{tbsp:20,cup:240} },
+
+  // ── Legumes & Beans ──
+  { name:"Black Beans (cooked)",     cal:132, protein:8.9,carbs:23, fat:0.5,  unitFactors:{cup:172}   },
+  { name:"Kidney Beans (cooked)",    cal:127, protein:8.7,carbs:23, fat:0.5,  unitFactors:{cup:177}   },
+
+  // ── Seafood ──
+  { name:"Cod (cooked)",             cal:105, protein:23, carbs:0,  fat:0.9,  unitFactors:{piece:100} },
+  { name:"Crab Meat",                cal:97,  protein:21, carbs:0,  fat:1.5,  unitFactors:{piece:100} },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let items = [];                       // { id, name, grams, cal, protein, carbs, fat }
+let selectedItem = null;              // current DB entry after picking from suggestions
+let nextId = 1;
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const searchInput   = document.getElementById('searchInput');
+const suggestions   = document.getElementById('suggestions');
+const qtyRow        = document.getElementById('qtyRow');
+const qtyInput      = document.getElementById('qtyInput');
+const unitSelect    = document.getElementById('unitSelect');
+const addBtn        = document.getElementById('addBtn');
+const ingredientList= document.getElementById('ingredientList');
+const emptyState    = document.getElementById('emptyState');
+const clearBtn      = document.getElementById('clearBtn');
+const toast         = document.getElementById('toast');
+
+// ============================================================
+// SEARCH & SUGGESTIONS
+// ============================================================
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  if(q.length < 1){ suggestions.classList.remove('visible'); selectedItem=null; qtyRow.style.display='none'; return; }
+
+  const matches = DB.filter(i => i.name.toLowerCase().includes(q)).slice(0,8);
+  if(matches.length === 0){
+    suggestions.innerHTML = '<div class="suggestion-item" style="color:#999;justify-content:center;">No results found</div>';
+    suggestions.classList.add('visible');
+    return;
+  }
+  suggestions.innerHTML = matches.map(i =>
+    `<div class="suggestion-item" data-name="${i.name}">${i.name} <span class="cal-badge">${i.cal} kcal/100g</span></div>`
+  ).join('');
+  suggestions.classList.add('visible');
+});
+
+suggestions.addEventListener('click', (e) => {
+  const item = e.target.closest('.suggestion-item');
+  if(!item || !item.dataset.name) return;
+  const found = DB.find(i => i.name === item.dataset.name);
+  if(!found) return;
+  selectedItem = found;
+  searchInput.value = found.name;
+  suggestions.classList.remove('visible');
+  qtyRow.style.display = 'flex';
+  qtyInput.value = 100;
+  unitSelect.value = 'g';
+  qtyInput.focus();
+});
+
+// close suggestions on outside click
+document.addEventListener('click', (e) => {
+  if(!e.target.closest('#searchWrap')) suggestions.classList.remove('visible');
+});
+
+// ============================================================
+// UNIT CHANGE → reset qty to sensible default
+// ============================================================
+unitSelect.addEventListener('change', () => {
+  const u = unitSelect.value;
+  if(u === 'g' || u === 'ml') qtyInput.value = 100;
+  else if(u === 'cup') qtyInput.value = 1;
+  else if(u === 'tbsp') qtyInput.value = 1;
+  else if(u === 'tsp') qtyInput.value = 1;
+  else if(u === 'piece') qtyInput.value = 1;
+});
+
+// ============================================================
+// ADD INGREDIENT
+// ============================================================
+addBtn.addEventListener('click', addIngredient);
+qtyInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') addIngredient(); });
+
+function addIngredient(){
+  if(!selectedItem) return showToast('👆 Please select an ingredient first');
+  const qty = parseFloat(qtyInput.value);
+  if(isNaN(qty) || qty <= 0) return showToast('⚠️ Enter a valid quantity');
+
+  const unit  = unitSelect.value;
+  const grams = convertToGrams(selectedItem, qty, unit);
+
+  const factor = grams / 100;
+  items.push({
+    id:      nextId++,
+    name:    selectedItem.name,
+    qty:     qty,
+    unit:    unit,
+    grams:   grams,
+    cal:     round(selectedItem.cal    * factor),
+    protein: round(selectedItem.protein * factor),
+    carbs:   round(selectedItem.carbs   * factor),
+    fat:     round(selectedItem.fat     * factor),
+  });
+
+  render();
+  showToast(`✅ ${selectedItem.name} added`);
+  // reset
+  searchInput.value = '';
+  selectedItem = null;
+  qtyRow.style.display = 'none';
+}
+
+function convertToGrams(dbItem, qty, unit){
+  if(unit === 'g' || unit === 'ml') return qty;                // 1 ml ≈ 1 g (approximation)
+  const factor = dbItem.unitFactors && dbItem.unitFactors[unit];
+  return factor ? qty * factor : qty * 100;                    // fallback: treat 1 unit = 100g
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function render(){
+  // ingredient list
+  if(items.length === 0){
+    ingredientList.innerHTML = '<div class="empty-state" id="emptyState"><div class="empty-icon">🍽️</div>Search &amp; add ingredients to start calculating</div>';
+    clearBtn.style.display = 'none';
+  } else {
+    ingredientList.innerHTML = items.map(i => `
+      <div class="ingredient-item" id="item-${i.id}">
+        <div class="ing-info">
+          <span class="ing-dot"></span>
+          <div>
+            <div class="ing-name">${i.name}</div>
+            <div class="ing-qty">${i.qty} ${i.unit} (${i.grams}g)</div>
+          </div>
+        </div>
+        <div class="ing-row-right">
+          <span class="ing-cal">${i.cal} kcal</span>
+          <button class="ing-remove" onclick="removeItem(${i.id})">✕</button>
+        </div>
+      </div>
+    `).join('');
+    clearBtn.style.display = 'block';
+  }
+
+  // totals
+  const totCal     = items.reduce((s,i) => s + i.cal,     0);
+  const totProtein = items.reduce((s,i) => s + i.protein, 0);
+  const totCarbs   = items.reduce((s,i) => s + i.carbs,   0);
+  const totFat     = items.reduce((s,i) => s + i.fat,     0);
+
+  document.getElementById('totalCal').textContent   = totCal;
+  document.getElementById('totalItems').textContent = items.length + ' ingredient' + (items.length !== 1 ? 's' : '');
+  document.getElementById('proteinVal').innerHTML   = totProtein + '<span style="font-size:.7em;font-weight:400">g</span>';
+  document.getElementById('carbsVal').innerHTML     = totCarbs   + '<span style="font-size:.7em;font-weight:400">g</span>';
+  document.getElementById('fatVal').innerHTML       = totFat     + '<span style="font-size:.7em;font-weight:400">g</span>';
+
+  // macro bars (by calorie contribution)
+  const calFromProtein = totProtein * 4;
+  const calFromCarbs   = totCarbs   * 4;
+  const calFromFat     = totFat     * 9;
+  const totalMacCal    = calFromProtein + calFromCarbs + calFromFat || 1;
+
+  const pProt = round((calFromProtein / totalMacCal) * 100);
+  const pCarb = round((calFromCarbs   / totalMacCal) * 100);
+  const pFat  = round((calFromFat     / totalMacCal) * 100);
+
+  document.getElementById('proteinBar').style.width = pProt + '%';
+  document.getElementById('carbsBar').style.width   = pCarb + '%';
+  document.getElementById('fatBar').style.width     = pFat  + '%';
+  document.getElementById('proteinPct').textContent = pProt + '%';
+  document.getElementById('carbsPct').textContent   = pCarb + '%';
+  document.getElementById('fatPct').textContent     = pFat  + '%';
+}
+
+function removeItem(id){
+  items = items.filter(i => i.id !== id);
+  render();
+  showToast('🗑️ Ingredient removed');
+}
+
+clearBtn.addEventListener('click', () => { items = []; render(); showToast('🗑️ All ingredients cleared'); });
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimer;
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function round(n){ return Math.round(n * 10) / 10; }
+</script>
+</body>
+</html>

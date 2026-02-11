@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nutrition Tips — CaloriFuel</title>
+<meta name="description" content="Discover practical nutrition tips on protein, carbs, fats, hydration, and healthy eating habits — all from the CaloriFuel blog."/>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<script src="nav.js"></script>
+
+<main>
+  <div class="container">
+
+    <div class="page-hero" style="max-width:720px;margin:0 auto 0;">
+      <h1>Nutrition Tips &amp; Guides</h1>
+      <p>Practical, science-backed advice to help you eat smarter — one tip at a time.</p>
+    </div>
+
+    <div class="tips-grid" id="tipsGrid"></div>
+
+  </div>
+</main>
+
+<script>
+const TIPS = [
+  {
+    emoji: "🥩",
+    tag: "protein",
+    title: "How Much Protein Do You Actually Need?",
+    text: "The general recommendation is 0.8g per kg of body weight for sedentary adults. If you're active or working out regularly, aim for 1.2–2.0g per kg. Great sources include chicken breast, eggs, fish, tofu, and lentils."
+  },
+  {
+    emoji: "🍚",
+    tag: "carbs",
+    title: "Not All Carbs Are Created Equal",
+    text: "Complex carbs like oats, brown rice, and sweet potatoes digest slowly and provide steady energy. Simple carbs like white bread and sugar cause quick spikes. Prioritize whole grains and fiber-rich foods for sustained fuel throughout the day."
+  },
+  {
+    emoji: "🥑",
+    tag: "fat",
+    title: "Healthy Fats Are Your Friend",
+    text: "Fats from avocados, olive oil, nuts, and fatty fish are essential for brain health, hormone production, and vitamin absorption. They're calorie-dense (9 kcal/g vs 4 for protein and carbs), so portion control matters — but don't avoid them."
+  },
+  {
+    emoji: "💧",
+    tag: "hydration",
+    title: "Hydration Affects Everything",
+    text: "Even mild dehydration (1–2%) can reduce focus, increase fatigue, and even trigger false hunger signals. Aim for at least 2 liters of water per day. Soups, fruits like watermelon, and herbal teas all count toward your daily intake."
+  },
+  {
+    emoji: "🥗",
+    tag: "general",
+    title: "The Power of the Plate Method",
+    text: "Fill half your plate with vegetables, a quarter with lean protein, and a quarter with complex carbs. Add a small portion of healthy fat on top. This simple visual trick naturally balances your macros without counting every gram."
+  },
+  {
+    emoji: "🍎",
+    tag: "general",
+    title: "Eat Whole Foods Whenever Possible",
+    text: "Whole foods — fruits, vegetables, meats, nuts, and grains in their natural form — are denser in micronutrients and fiber than processed alternatives. They keep you fuller longer and provide a more stable energy release throughout the day."
+  },
+  {
+    emoji: "⏰",
+    tag: "general",
+    title: "Meal Timing Isn't Magic — But It Helps",
+    text: "While total daily calories matter most, eating a balanced breakfast can set your energy tone for the day. A protein-rich morning meal (eggs, Greek yogurt, oats) helps regulate appetite and reduces the temptation to snack later."
+  },
+  {
+    emoji: "🧈",
+    tag: "fat",
+    title: "Read the Label: Hidden Fats Are Everywhere",
+    text: "Many processed foods — sauces, dressings, baked goods, and fast food — pack surprising amounts of fat and calories. Use CaloriFuel to calculate the real nutritional cost of your meals before you commit to them."
+  },
+  {
+    emoji: "🥦",
+    tag: "carbs",
+    title: "Fiber: The Underrated Superstar",
+    text: "Fiber isn't digested for energy, but it's crucial for gut health, blood sugar regulation, and satiety. Aim for 25–38g daily from sources like broccoli, beans, oats, and whole grains. It's the secret weapon behind feeling full after a meal."
+  },
+  {
+    emoji: "🍳",
+    tag: "protein",
+    title: "Eggs: The Most Versatile Protein Source",
+    text: "One large egg has about 6g of protein and only 78 calories. They're cheap, fast to cook, and incredibly versatile — scrambled, boiled, poached, or baked. The yolk holds most of the fat and micronutrients, so don't skip it."
+  },
+  {
+    emoji: "🏋️",
+    tag: "general",
+    title: "Calories In vs. Calories Out — Simplified",
+    text: "Weight management fundamentally comes down to energy balance. If you consume more calories than you burn, you gain weight — and vice versa. Tools like CaloriFuel help you understand the \"in\" side of the equation with precision and ease."
+  },
+  {
+    emoji: "🍬",
+    tag: "carbs",
+    title: "Sugar Hides in Plain Sight",
+    text: "Ketchup, flavored yogurts, juices, and granola bars often contain far more sugar than expected. A single serving of some commercial granola bars rivals a candy bar in sugar content. Always check — and when possible, calculate with CaloriFuel."
+  },
+  {
+    emoji: "🥜",
+    tag: "fat",
+    title: "Nuts: Calorie-Dense But Worth It",
+    text: "A handful of almonds has around 160 calories — but also 6g of protein, 14g of healthy fat, and loads of magnesium and vitamin E. They're perfect as a portable snack. Just be mindful of portion size; it's easy to over-eat them."
+  },
+  {
+    emoji: "🫙",
+    tag: "general",
+    title: "Meal Prep Saves Calories (and Time)",
+    text: "When you're hungry and in a rush, you're more likely to reach for processed, calorie-heavy convenience foods. Prepping meals on Sunday — cooking grains, portioning proteins, chopping veggies — makes healthy eating automatic during the week."
+  },
+  {
+    emoji: "🧃",
+    tag: "hydration",
+    title: "Fruit Juice ≠ Eating Fruit",
+    text: "A glass of orange juice has almost the same calories as a whole orange — but none of the fiber. Fiber slows sugar absorption and keeps you feeling full. Whenever possible, eat the whole fruit instead of drinking the juice."
+  },
+  {
+    emoji: "🍫",
+    tag: "general",
+    title: "Dark Chocolate: A Guilt-Free Treat?",
+    text: "Dark chocolate (70%+ cacao) is rich in antioxidants and has less sugar than milk chocolate. A small square (30g) has about 170 calories. Enjoy it mindfully as an occasional treat — and use CaloriFuel to fit it into your daily balance."
+  }
+];
+
+const grid = document.getElementById('tipsGrid');
+grid.innerHTML = TIPS.map(t => `
+  <div class="tip-card">
+    <div class="tip-card-header">
+      <span class="tip-emoji">${t.emoji}</span>
+      <span class="tip-tag ${t.tag}">${t.tag.charAt(0).toUpperCase() + t.tag.slice(1)}</span>
+    </div>
+    <div class="tip-card-body">
+      <h3>${t.title}</h3>
+      <p>${t.text}</p>
+    </div>
+  </div>
+`).join('');
+</script>
+</body>
+</html>
