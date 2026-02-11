@@ -21,7 +21,7 @@
 // ============ NAV + FOOTER + COOKIE BANNER INJECTION ============
 const NAV_HTML = `
 <nav>
-  <a href="index.html" class="nav-logo"><span class="leaf">🌿</span> CaloriFuel</a>
+  <a href="index.html" class="nav-logo"><span class="leaf">🌿</span> Pin Recipes</a>
   <ul class="nav-links" id="navLinks">
     <li><a href="index.html"    id="nav-index">Calculator</a></li>
     <li><a href="recipes.html"  id="nav-recipes">Recipes</a></li>
@@ -39,7 +39,7 @@ const FOOTER_HTML = `
 <footer>
   <div class="footer-inner">
     <div>
-      <h4>🌿 CaloriFuel</h4>
+      <h4>🌿 Pin Recipes</h4>
       <p>A free, accurate recipe calorie calculator built to help you understand your nutrition — one ingredient at a time.</p>
     </div>
     <div>
@@ -63,7 +63,7 @@ const FOOTER_HTML = `
     </div>
   </div>
   <div class="footer-bottom">
-    <p>&copy; <span id="footerYear"></span> CaloriFuel. All rights reserved.</p>
+    <p>&copy; <span id="footerYear"></span> Pin Recipes. All rights reserved.</p>
   </div>
 </footer>`;
 
@@ -109,7 +109,7 @@ document.getElementById('footerYear').textContent = new Date().getFullYear();
 // ============ COOKIE LOGIC ============
 (function(){
   const banner  = document.getElementById('cookieBanner');
-  const consent = localStorage.getItem('califuel_cookie_consent');
+  const consent = localStorage.getItem('pinrecipes_cookie_consent');
 
   if(consent) {
     banner.style.display = 'none';
@@ -119,13 +119,13 @@ document.getElementById('footerYear').textContent = new Date().getFullYear();
   setTimeout(() => banner.classList.add('visible'), 800);
 
   document.getElementById('cookieAccept').addEventListener('click', () => {
-    localStorage.setItem('califuel_cookie_consent', 'accepted');
+    localStorage.setItem('pinrecipes_cookie_consent', 'accepted');
     banner.classList.remove('visible');
     setTimeout(() => banner.style.display = 'none', 400);
   });
 
   document.getElementById('cookieReject').addEventListener('click', () => {
-    localStorage.setItem('califuel_cookie_consent', 'rejected');
+    localStorage.setItem('pinrecipes_cookie_consent', 'rejected');
     banner.classList.remove('visible');
     setTimeout(() => banner.style.display = 'none', 400);
   });
